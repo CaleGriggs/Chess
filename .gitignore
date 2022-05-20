@@ -10,6 +10,7 @@
 # general
 #########
 
+
 addons.make
 [Bb]uild/
 [Oo]bj/
@@ -45,7 +46,9 @@ xcuserdata/
 *.pdb
 *.ilk
 *.aps
-*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
 ipch/
 
 # Eclipse
