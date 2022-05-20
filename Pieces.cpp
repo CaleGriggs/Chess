@@ -3,7 +3,7 @@
 #include <string>
 
 
-std::vector<int>Pieces::PawnMove(int pos, int color, int squares[]) 
+std::vector<int>Pieces::PawnMove(int pos, int color, int squares[]) // TODO: fix available move to other side of board at start
 {
 	std::vector<int>avail = {};
 	int colorModifier;
