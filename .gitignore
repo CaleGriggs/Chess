@@ -40,6 +40,7 @@ icon.rc
 xcuserdata/
 
 # Visual Studio
+*.vs/
 *.sdf
 *.opensdf
 *.suo
