@@ -23,11 +23,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		void makingMoves();
 
 		ofImage BKing, BQueen, BKnight, BBishop, BRook, BPawn, WKing, WQueen, WKnight, WBishop, WRook, WPawn;
 		std::map<int, ofImage>WhitePieces;
 		std::map<int, ofImage>BlackPieces;
 		vector<std::map<int, ofImage>>piecePics;
+
 		int click = 0, moveFrom = 0, moveTo = 0;
+		int selectedPiece = -1;
 		std::vector<int> availableMoves;
 };

@@ -59,6 +59,8 @@ void ofApp::draw(){
 		unsigned color;
 		color = ((1 << 3) - 1) & (board.squares[i]);
 
+		// display legal moves per selected piece
+
 		if (size(availableMoves) > 0 && availableMoves[moves] == i)
 		{
 
@@ -80,6 +82,11 @@ void ofApp::draw(){
 				moves = 0;
 			}
 		}
+
+		ofSetColor(255,255,255);
+
+		// draw piece images
+
 		if (board.squares[i] - color == pieces.Black) 
 		{
 			piecePics[0][color].draw(file*100, rank*100, 100, 100);
@@ -88,25 +95,7 @@ void ofApp::draw(){
 		{
 			piecePics[1][color].draw(file*100, rank*100, 100, 100);
 		}
-		if (size(availableMoves) > 0 && availableMoves[moves] == i)
-		{
 
-			if (board.squares[i] == 0)
-			{
-				ofFill();
-				ofSetColor(200, 200, 200);
-				ofDrawCircle((file * 100) + 50, (rank * 100) + 50, 25);
-			}
-			moves++;
-			if(moves >= size(availableMoves))
-			{
-				moves = 0;
-			}
-		}
-		else
-		{
-			ofSetColor(255);
-		}
 		file++;
 		if (file == 8)
 		{
@@ -142,47 +131,51 @@ void ofApp::mousePressed(int x, int y, int button){
 	x = ( x - (x % 100)) / 100;  
 	y = (y - (y % 100)) / 100;
 
-	if (click == -1)										//empty click
-	{
-		click = x + (y * 8);								//set click
-		moveFrom = click;
-		int selectedPiece = board.squares[click];			
+	// select a new square
 
-		if (selectedPiece == 0)								//no piece selected
+	if (click == -1) 
+	{
+		click = x + (y * 8);
+	}
+
+	// if same color, different piece is selected
+
+	if (((0b11000) & selectedPiece) == ((0b11000) & board.squares[click]))
+	{
+		selectedPiece = board.squares[click];			
+		moveFrom = click;
+
+		// Click empty square
+
+		if (selectedPiece == 0)	
 		{
 			click = -1;
+			selectedPiece = -1;
 		}
 		else
-			{
-			unsigned color;
-			color = (0b11000) & selectedPiece;				//bit mask for selectedPiece
-			if (selectedPiece - color == pieces.Pawn) 
-			{
-				availableMoves = pieces.PawnMove(click, color, board.squares);
-			}
-			else if (selectedPiece - color == pieces.Bishop)
-			{
-				availableMoves = pieces.BishopMove(click, color, board.squares);
-			}
-			else if(selectedPiece - color == pieces.Rook)
-			{
-				availableMoves = pieces.RookMove(click, color, board.squares);
-			}
-			else if (selectedPiece - color == pieces.Knight)
-			{
-				availableMoves = pieces.KnightMove(click, color, board.squares);
-			}
-			else if (selectedPiece - color == pieces.Queen)
-			{
-				availableMoves = pieces.QueenMove(click, color, board.squares);
-			}
-			else if (selectedPiece - color == pieces.King)
-			{
-				availableMoves = pieces.KingMove(click, color, board.squares);
-			}
-			sort(availableMoves.begin(), availableMoves.end());
+		{
+			makingMoves();
 		}
 	}
+
+	// No previously selected piece
+
+	else if (selectedPiece == -1)
+	{
+		selectedPiece = board.squares[click];
+		moveFrom = click;
+		if (selectedPiece == 0)
+		{
+			click = -1;
+			selectedPiece = -1;
+		}
+		else 
+		{
+			makingMoves();
+		}
+	}
+
+	// piece selected, check for legal move of selectedPice
 	else
 	{
 		click = x + (y * 8);
@@ -191,10 +184,13 @@ void ofApp::mousePressed(int x, int y, int button){
 			board.squares[click] = board.squares[moveFrom];
 			board.squares[moveFrom] = 0;
 			moveTo = x + (y * 8);
+			selectedPiece = -1;
 		}
 		click = -1;
 		availableMoves = {};
+		selectedPiece = -1;
 	}
+	click = -1;
 }
 
 //--------------------------------------------------------------
@@ -225,4 +221,39 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+
+/*
+Find available moves for pieces
+*/
+void ofApp::makingMoves()
+{
+	unsigned color;
+	color = (0b11000) & selectedPiece;				//bit mask for selectedPiece
+	if (selectedPiece - color == pieces.Pawn)
+	{
+		availableMoves = pieces.PawnMove(click, color, board.squares);
+	}
+	else if (selectedPiece - color == pieces.Bishop)
+	{
+		availableMoves = pieces.BishopMove(click, color, board.squares);
+	}
+	else if (selectedPiece - color == pieces.Rook)
+	{
+		availableMoves = pieces.RookMove(click, color, board.squares);
+	}
+	else if (selectedPiece - color == pieces.Knight)
+	{
+		availableMoves = pieces.KnightMove(click, color, board.squares);
+	}
+	else if (selectedPiece - color == pieces.Queen)
+	{
+		availableMoves = pieces.QueenMove(click, color, board.squares);
+	}
+	else if (selectedPiece - color == pieces.King)
+	{
+		availableMoves = pieces.KingMove(click, color, board.squares);
+	}
+	sort(availableMoves.begin(), availableMoves.end());
 }
