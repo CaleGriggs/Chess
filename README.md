@@ -3,7 +3,7 @@
 #  Chess 
 ### Project Written With [Openframeworks](https://openframeworks.cc/about/)
 
-This is a chess engine and a solo project.
+This is a chess board/game and a solo project.
 
 
 ### Explore/run the code for yourself:
