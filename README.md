@@ -1,7 +1,7 @@
 ### Status: ACTIVE DEVELOPMENT
 
 #  Chess 
-### Project Written With [Openframeworks](https://openframeworks.cc/about/)
+### Project Written Using [Openframeworks](https://openframeworks.cc/about/)
 
 This is a chess board/game and a solo project.
 
