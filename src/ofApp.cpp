@@ -8,7 +8,11 @@ const string startFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+
+	// starting position
 	board.BoardLogic(startFEN);
+
+	// load piece images
 	BKing.load("../data/Black_King.png");
 	BQueen.load("../data/Black_Queen.png");
 	BKnight.load("../data/Black_Knight.png");
@@ -21,6 +25,8 @@ void ofApp::setup(){
 	WBishop.load("../data/White_Bishop.png");
 	WRook.load("../data/White_Rook.png");
 	WPawn.load("../data/White_Pawn.png");
+
+	// mapping images to values set in Pieces.h
 	BlackPieces = {
 		{pieces.King	, BKing},
 		{pieces.Queen	, BQueen },
@@ -50,17 +56,22 @@ void ofApp::update(){
 void ofApp::draw(){
 	
 
-	// ---- chess board graphic-------
+	// draw chess board
 	board.Draw();
 
+	// draw pieces
 	int file = 0, rank = 0; int moves = 0;
 	for (int i = 0; i < size(board.squares); i++)
 	{
 		unsigned color;
 		color = ((1 << 3) - 1) & (board.squares[i]);
 
-		// display legal moves per selected piece
+		// draw legal moves per selected piece
+		if (board.squares[i] == selectedPiece)
+		{
+			ofSetColor(0, 0, 0);
 
+		}
 		if (size(availableMoves) > 0 && availableMoves[moves] == i)
 		{
 
@@ -70,6 +81,7 @@ void ofApp::draw(){
 				ofSetColor(200, 200, 200);
 				ofDrawCircle((file * 100) + 50, (rank * 100) + 50, 25);
 			}
+			// slightly bigger circles for spaces with pieces
 			else 
 			{
 				ofFill();
@@ -132,14 +144,12 @@ void ofApp::mousePressed(int x, int y, int button){
 	y = (y - (y % 100)) / 100;
 
 	// select a new square
-
 	if (click == -1) 
 	{
 		click = x + (y * 8);
 	}
 
 	// if same color, different piece is selected
-
 	if (((0b11000) & selectedPiece) == ((0b11000) & board.squares[click]))
 	{
 		selectedPiece = board.squares[click];			
@@ -159,7 +169,6 @@ void ofApp::mousePressed(int x, int y, int button){
 	}
 
 	// No previously selected piece
-
 	else if (selectedPiece == -1)
 	{
 		selectedPiece = board.squares[click];
@@ -167,6 +176,11 @@ void ofApp::mousePressed(int x, int y, int button){
 		if (selectedPiece == 0)
 		{
 			click = -1;
+			selectedPiece = -1;
+		}
+		// check if piece color == player turn
+		else if ((((0b11000 & selectedPiece) == 8 && playerTurn == 1) || (0b11000 & selectedPiece) == 16 && playerTurn == 0))
+		{
 			selectedPiece = -1;
 		}
 		else 
@@ -185,6 +199,7 @@ void ofApp::mousePressed(int x, int y, int button){
 			board.squares[moveFrom] = 0;
 			moveTo = x + (y * 8);
 			selectedPiece = -1;
+			playerTurn = !playerTurn;
 		}
 		click = -1;
 		availableMoves = {};
@@ -229,8 +244,10 @@ Find available moves for pieces
 */
 void ofApp::makingMoves()
 {
+	//bit mask for selectedPiece color
 	unsigned color;
-	color = (0b11000) & selectedPiece;				//bit mask for selectedPiece
+	color = (0b11000) & selectedPiece;
+
 	if (selectedPiece - color == pieces.Pawn)
 	{
 		availableMoves = pieces.PawnMove(click, color, board.squares);

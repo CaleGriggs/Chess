@@ -8,35 +8,50 @@ std::vector<int>Pieces::PawnMove(int pos, int color, int squares[])
 	std::vector<int>avail = {};
 	int colorModifier;
 
-	if (color == Pieces::White) {		// only matters for pawn, only piece that travels in one direction
+	if (color == Pieces::White) 
+	{
 		colorModifier = -1;
 	}
-	else {
+	else 
+	{
 		colorModifier = 1;
 	}
-	if (squares[pos + (colorModifier * 8)] == 0) {
+	if (squares[pos + (colorModifier * 8)] == 0) 
+	{
 		avail.push_back(pos + (colorModifier * 8));
 
 		// double move start
-		if (squares[pos + (colorModifier * 16)] == 0) {	
-			if ((color == Pieces::Black) && (7 < pos && pos < 16)) {
+		if (squares[pos + (colorModifier * 16)] == 0) 
+		{	
+			if ((color == Pieces::Black) && (7 < pos && pos < 16)) 
+			{
 				avail.push_back(pos + (colorModifier * 16));
 			}
-			if ((color == Pieces::White) && (47 < pos && pos < 56)) {
+			if ((color == Pieces::White) && (47 < pos && pos < 56)) 
+			{
 				avail.push_back(pos + (colorModifier * 16));
 			}
 		}
 	}
 
 	// Attacks
-	if (((0b11000) & squares[pos + (colorModifier * 7)] )!= color && squares[pos + (colorModifier * 7)] != 0) {
+	if (((0b11000) & squares[pos + (colorModifier * 7)] )!= color && squares[pos + (colorModifier * 7)] != 0) 
+	{
 		avail.push_back(pos + (colorModifier * 7));
 	}
-	if (((0b11000) & squares[pos + (colorModifier * 9)]) != color && squares[pos + (colorModifier * 9)] != 0) {
+	if (((0b11000) & squares[pos + (colorModifier * 9)]) != color && squares[pos + (colorModifier * 9)] != 0) 
+	{
 		avail.push_back(pos + (colorModifier * 9));
 	}
 	/*
-		en passent goes here... maybe
+		en passant goes here... maybe
+
+		rules:
+		capturing pawn must have advanced exactly three ranks
+		captured pawn must have moved two squares in one move, landing right next to the capturing pawn
+		The en passant capture must be performed on the turn immediately after the pawn being captured moves
+
+
 	*/
 
 	if ((edgeTop(pos - 8) && color == Pieces::White) || (edgeBottom(pos + 8) && color == Pieces::Black))// promote										
@@ -135,11 +150,15 @@ std::vector<int>Pieces::BishopMove(int pos, int color, int squares[])
 	{
 
 		temp = pos - (9 * multi);
-		if (temp > -1 && temp < 64)														// can't go too high
+
+		// can't go too high
+		if (temp > -1 && temp < 64)
 		{
-			if (!edgeLeft(pos))															// can't wrap around to other side
+			// cant' wrap around to tother side
+			if (!edgeLeft(pos))
 			{
-				if (((0b11000) & squares[temp]) != color)								// not friendly color
+				// not friendly color
+				if (((0b11000) & squares[temp]) != color)								
 				{
 					if (edgeTop(temp) || edgeLeft(temp) || squares[temp] != 0)
 					{
@@ -173,11 +192,14 @@ std::vector<int>Pieces::BishopMove(int pos, int color, int squares[])
 	while (true)
 	{
 		temp = pos - (7 * multi);
-		if (temp > -1 && temp < 64)														// can't go too high
+		// can't go too high
+		if (temp > -1 && temp < 64)														
 		{
-			if (!edgeRight(pos))														// can't wrap around to other side
+			// can't wrap around to other side
+			if (!edgeRight(pos))														
 			{
-				if (((0b11000) & squares[temp]) != color)								// not friendly color
+				// not friendly color
+				if (((0b11000) & squares[temp]) != color)								
 				{
 					if (edgeTop(temp) || edgeRight(temp) || squares[temp] != 0)
 					{
@@ -211,11 +233,14 @@ std::vector<int>Pieces::BishopMove(int pos, int color, int squares[])
 	while (true)
 	{
 		temp = pos + (7 * multi);
-		if (temp > -1 && temp < 64)														// can't go too high
+		// can't go too high
+		if (temp > -1 && temp < 64)														
 		{
-			if (!edgeLeft(pos))															// can't wrap around to other side
+			// can't wrap around to other side
+			if (!edgeLeft(pos))															
 			{
-				if (((0b11000) & squares[temp]) != color)								// not friendly color
+				// not friendly color
+				if (((0b11000) & squares[temp]) != color)								
 				{
 					if (edgeBottom(temp) || edgeLeft(temp) || squares[temp] != 0)
 					{
@@ -249,11 +274,14 @@ std::vector<int>Pieces::BishopMove(int pos, int color, int squares[])
 	while (true)
 	{
 		temp = pos + (9 * multi);
-		if (temp > -1 && temp < 64)														// can't go too high
+		// can't go too high
+		if (temp > -1 && temp < 64)														
 		{
-			if (!edgeRight(pos))														// can't wrap around to other side
+			// can't wrap around to other side
+			if (!edgeRight(pos))														
 			{
-				if (((0b11000) & squares[temp]) != color)								// not friendly color
+				// not friendly color
+				if (((0b11000) & squares[temp]) != color)								
 				{
 					if (edgeBottom(temp) || edgeRight(temp) || squares[temp] != 0)
 					{
@@ -287,121 +315,148 @@ std::vector<int>Pieces::RookMove(int pos, int color, int squares[])
 {
 	int temp = pos;
 	std::vector<int> avail = {};
-	while (true)																		// North move
+
+	// North move
+	while (true)	
 	{
 		temp -= 8;
-		if (temp < 0)																	// Out of scope
+		// Out of Scope
+		if (temp < 0)					
 		{
 			break;
 		}
-		if (edgeTop(temp))																// Top edge of board
+		
+		// Top edge of board
+		if (edgeTop(temp))		
 		{
 			avail.push_back(temp);
 			break;
 		}
 		if (squares[temp] != 0)
 		{
-			if (((0b11000) & squares[temp]) != color)									// Enemy piece, can't move past
+			// Enemy piece, can't move past
+			if (((0b11000) & squares[temp]) != color)	
 			{
 				avail.push_back(temp);
 				break;
 			}
-			else if (((0b11000) & squares[temp]) == color)								// Same color blocks movement; can't move here
+			// Same color blocks movement; con't move here
+			else if (((0b11000) & squares[temp]) == color)	
 			{
 				break;
 			}
 		}
-		else																			// Empty square
+		// Empty square
+		else		
 		{
 			avail.push_back(temp);
 		}
 	}
 	temp = pos;
-	while (true)																		// South move
+	
+	// South move
+	while (true)																	
 	{
 		temp += 8;
-		if (temp > 63)																	// Out of scope
+		// Out of Scope
+		if (temp > 63)																	
 		{
 			break;
 		}
-		if (edgeBottom(temp))															// Bottom edge of board
+		// bootom edge of board
+		if (edgeBottom(temp))															
 		{
 			avail.push_back(temp);
 			break;
 		}
 		if (squares[temp] != 0)
 		{
-			if (((0b11000) & squares[temp]) != color)									// Enemy piece, can't move past
+			// Enemy piece, can't move past
+			if (((0b11000) & squares[temp]) != color)				
 			{
 				avail.push_back(temp);
 				break;
 			}
-			else if (((0b11000) & squares[temp]) == color)								// Same color blocks movement; can't move here
+			// Same color blocks movement; can't move here
+			else if (((0b11000) & squares[temp]) == color)			
 			{
 				break;
 			}
 		}
-		else																			// Empty square
+		// Empty square
+		else														
 		{
 			avail.push_back(temp);
 		}
 	}
 	temp = pos;
-	while (true)																		// East move
+	// East move
+	while (true)													
 	{
 		temp += 1;
-		if (temp < 0 || edgeRight(pos))													// Out of scope
+		// Out of scope
+		if (temp < 0 || edgeRight(pos))								
 		{
 			break;
 		}
-		if (edgeRight(temp))															// Right edge of board
+		// right edge of board
+		if (edgeRight(temp))										
 		{
 			avail.push_back(temp);
 			break;
 		}
 		if (squares[temp] != 0)
 		{
-			if (((0b11000) & squares[temp]) != color)									// Enemy piece, can't move past
+			// Enemy piece, cant move past
+			if (((0b11000) & squares[temp]) != color)				
 			{
 				avail.push_back(temp);
 				break;
 			}
-			else if (((0b11000) & squares[temp]) == color)								// Same color blocks movement; can't move here
+			// Same color blocks movement; can't move here
+			else if (((0b11000) & squares[temp]) == color)			
 			{
 				break;
 			}
 		}
-		else																			// Empty square
+		// Empty square
+		else														
 		{
 			avail.push_back(temp);
 		}
 	}
 	temp = pos;
-	while (true)																		// West move
+	// West move
+	while (true)													
 	{
 		temp -= 1;
-		if (temp > 63 || edgeLeft(pos))													// Out of scope
+		// out of soap
+		if (temp > 63 || edgeLeft(pos))								
 		{
 			break;
 		}
-		if (edgeLeft(temp))																// Left edge of board
+		// left edge of board
+		if (edgeLeft(temp))											
 		{
 			avail.push_back(temp);
 			break;
 		}
 		if (squares[temp] != 0)
 		{
-			if (((0b11000) & squares[temp]) != color)									// Enemy piece, can't move past
+			// Enemy piece, can't move past
+			if (((0b11000) & squares[temp]) != color)				
 			{
 				avail.push_back(temp);
 				break;
 			}
-			else if (((0b11000) & squares[temp]) == color)								// Same color blocks movement; can't move here
+			// Same color blocks movement; can't move here
+			else if (((0b11000) & squares[temp]) == color)			
 			{
 				break;
 			}
 		}
-		else																			// Empty square
+		// Empty square
+		else														
 		{
 			avail.push_back(temp);
 		}

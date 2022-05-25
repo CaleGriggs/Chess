@@ -4,7 +4,8 @@
 #include <vector>
 #include <algorithm>
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp
+{
 
 	public:
 		void setup();
@@ -24,6 +25,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		void makingMoves();
+
+		bool playerTurn = 0; // 0 == white, 1 == black
 
 		ofImage BKing, BQueen, BKnight, BBishop, BRook, BPawn, WKing, WQueen, WKnight, WBishop, WRook, WPawn;
 		std::map<int, ofImage>WhitePieces;

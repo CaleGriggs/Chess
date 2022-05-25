@@ -10,7 +10,7 @@
 # general
 #########
 
-
+*.md
 addons.make
 [Bb]uild/
 [Oo]bj/
