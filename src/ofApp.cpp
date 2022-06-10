@@ -271,6 +271,14 @@ void ofApp::makingMoves()
 	else if (selectedPiece - color == pieces.King)
 	{
 		availableMoves = pieces.KingMove(click, color, board.squares);
+
+		for (int i = 0; i < size(availableMoves); i++)
+		{
+			if (pieces.UnderAttack(availableMoves[i], color, board.squares))
+			{
+				availableMoves[i] = 99;
+			}
+		}
 	}
 	sort(availableMoves.begin(), availableMoves.end());
 }

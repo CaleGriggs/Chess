@@ -51,7 +51,6 @@ std::vector<int>Pieces::PawnMove(int pos, int color, int squares[])
 		captured pawn must have moved two squares in one move, landing right next to the capturing pawn
 		The en passant capture must be performed on the turn immediately after the pawn being captured moves
 
-
 	*/
 
 	if ((edgeTop(pos - 8) && color == Pieces::White) || (edgeBottom(pos + 8) && color == Pieces::Black))// promote										
@@ -60,7 +59,6 @@ std::vector<int>Pieces::PawnMove(int pos, int color, int squares[])
 	}
 	return avail;
 }
-
 std::vector<int>Pieces::KnightMove(int pos, int color, int squares[])  
 
 { 
@@ -482,7 +480,7 @@ std::vector<int>Pieces::KingMove(int pos, int color, int squares[])
 		moves[1] = 0;
 		moves[2] = 0;
 	}
-	if (edgeLeft(pos)) 
+	if (edgeLeft(pos))
 	{
 		moves[0] = 0;
 		moves[3] = 0;
@@ -501,7 +499,7 @@ std::vector<int>Pieces::KingMove(int pos, int color, int squares[])
 		moves[7] = 0;
 	}
 
-	for (int i = 0; i < 8 ; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if ((0b11000 & squares[pos + moves[i]]) != color && moves[i] != 0)
 		{
@@ -509,4 +507,79 @@ std::vector<int>Pieces::KingMove(int pos, int color, int squares[])
 		}
 	}
 	return avail;
+};
+bool Pieces::UnderAttack(int pos, int color, int squares[])
+{
+	std::vector<int> check = {};
+	int maskColor = (0b11000);
+	int maskPiece = (0b00111);
+	int checkingThis = 0;
+	int threat = 0;
+	// bishop, queen
+	check = BishopMove(pos, color, squares);
+	for (int i = 0; i < size(check); i++)
+	{
+		threat = squares[check[i]];
+		checkingThis = maskPiece & threat;
+		if((maskColor & threat) != color)
+		{
+			if (checkingThis == Queen || checkingThis == Bishop)
+			{
+				return true;
+			}
+		}
+	}
+	check = RookMove(pos, color, squares);
+	for (int i = 0; i < size(check); i++)
+	{
+		threat = squares[check[i]];
+		checkingThis = maskPiece & threat;
+		if((maskColor & threat) != color)
+		{
+			if (checkingThis == Queen || checkingThis == Rook)
+			{
+				return true;
+			}
+		}
+	}
+	check = KingMove(pos, color, squares);
+	for (int i = 0; i < size(check); i++)
+	{
+		threat = squares[check[i]];
+		checkingThis = maskPiece & threat;
+		if ((maskColor & threat) != color)
+		{
+			if (checkingThis == King)
+			{
+				return true;
+			}
+		}
+	}
+	check = KnightMove(pos, color, squares);
+	for (int i = 0; i < size(check); i++)
+	{
+		threat = squares[check[i]];
+		checkingThis = maskPiece & threat;
+		if ((maskColor & threat) != color)
+		{
+			if (checkingThis == Knight)
+			{
+				return true;
+			}
+		}
+	}
+	check = PawnMove(pos, color, squares);
+	for (int i = 0; i < size(check); i++)
+	{
+		threat = squares[check[i]];
+		checkingThis = maskPiece & threat;
+		if ((maskColor & threat) != color)
+		{
+			if (checkingThis == Pawn)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 };

@@ -22,6 +22,7 @@ class Pieces
 		std::vector<int> RookMove(int pos, int color, int squares[]);
 		std::vector<int> QueenMove(int pos, int color, int squares[]);
 		std::vector<int> KingMove(int pos, int color, int squares[]);
+		bool UnderAttack(int pos, int color, int squares[]);
 
 		static bool edgeTop(int x)
 		{
