@@ -1,4 +1,5 @@
-### Status: ACTIVE DEVELOPMENT
+### Status: ON HIATUS 
+## Learning Reactjs/ webdev
 
 #  Chess 
 ### Project Written Using [Openframeworks](https://openframeworks.cc/about/)
