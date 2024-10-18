@@ -1,6 +1,3 @@
-## Status: ON HIATUS 
-### Learning Reactjs/ webdev instead
-
 #  Chess 
 ### Project Written Using [Openframeworks](https://openframeworks.cc/about/)
 
